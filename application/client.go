@@ -15,6 +15,7 @@ import (
 
 // S3Client ...
 type S3Client interface {
+	PutBucketPolicy(bucketName string) error
 	CreateBucket(bucketName string) error
 	DeleteBucket(bucketName string) error
 	DeleteAllBucketObject(bucketName string) error
@@ -123,4 +124,23 @@ func (client *s3Client) DeleteAllBucketObject(bucketName string) error {
 	}
 
 	return nil
+}
+
+func (client *s3Client) PutBucketPolicy(bucketName string) error {
+	_, err := client.s3.PutBucketPolicy(&s3.PutBucketPolicyInput{
+		Bucket: aws.String(bucketName),
+		Policy: aws.String(`{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AddPerm",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::` + bucketName + `/*"
+        }
+    ]
+}`),
+	})
+	return err
 }

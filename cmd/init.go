@@ -62,6 +62,10 @@ Create filepod.json and bucket`,
     "bucketName": "` + bucketName + `"
 }`)
 
+		err = client.PutBucketPolicy(bucketName)
+		if err != nil {
+			panic(err)
+		}
 	},
 }
 
