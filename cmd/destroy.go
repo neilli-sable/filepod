@@ -50,12 +50,13 @@ var destroyCmd = &cobra.Command{
 		bucketName := setting.BucketName
 
 		client := application.NewS3Client(sess)
-		err = client.DeleteBucket(bucketName)
+
+		client.DeleteAllBucketObject(bucketName)
 		if err != nil {
 			panic(err)
 		}
 
-		client.DeleteAllBucketObject(bucketName)
+		err = client.DeleteBucket(bucketName)
 		if err != nil {
 			panic(err)
 		}
